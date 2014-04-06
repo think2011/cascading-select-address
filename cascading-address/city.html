@@ -1,0 +1,61 @@
+<span>
+    <style>
+        .cascading-address {
+            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+            position:absolute;
+            z-index: 999;
+            background: #fff;
+        }
+
+        .cascading-address ul {
+            padding:5px;
+            border-bottom: 1px dotted #ddd;
+        }
+
+        .cascading-address ul li {
+            font-size: 13px;
+            list-style: none;
+            display: inline-block;
+            margin:5px 7px;
+            cursor: pointer;
+        }
+
+        .cascading-address .form-group {
+            margin: 10px;
+        }
+    </style>
+    <input ng-model="all" ng-focus="open('show')" placeholder="输入地址" type="text" class="form-control" />
+
+    <div ng-show="show" class="cascading-address">
+        <ul>
+            <li ng-repeat="item in provinces" ng-click="set.p(item.p)" ng-class="{'label label-success': p === item.p}">
+                {{ item.p }}
+            </li>
+        </ul>
+
+        <ul ng-show="cities.length">
+            <li ng-repeat="item in cities" ng-click="set.c(item.n)" ng-class="{'label label-success': c === item.n}">
+                {{ item.n }}
+            </li>
+        </ul>
+
+        <ul ng-show="dists.length">
+            <li ng-repeat="item in dists" ng-click="set.a(item.s)" ng-class="{'label label-success': a === item.s}">
+                {{ item.s }}
+            </li>
+        </ul>
+
+        <div ng-show="p" class="form-group">
+            <label class="control-label text-success">
+                <span class="text-muted">地址：</span>
+                {{ p }} {{ c }} {{ a }} {{ d }}
+            </label>
+            <input type="text" ng-model="d" class="form-control" placeholder="具体地址">
+        </div>
+
+        <div class="panel-footer text-right">
+            <button ng-click="clear()" class="btn btn-link btn-sm">清空</button>
+            <button ng-click="open('hide')" class="btn btn-success btn-sm">确定</button>
+        </div>
+    </div>
+</span>
