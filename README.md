@@ -23,6 +23,9 @@ angularjs 实现的省市区地址级联选择器
 # <input select-address p="p" a="a" c="c" d="d" value="{{p}} {{a}} {{c}} {{d}}" type="text" />
 #
 ```
+
+demo: [点我去看](http://think2011.github.io/cascading-select-address/)
+
 ---
 > ##### 技术： angularjs
 > ##### 时间： 2014年4月
