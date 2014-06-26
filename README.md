@@ -7,9 +7,9 @@ angularjs 实现的省市区地址级联选择器
 
 目前是2.1版本
 
-![](http://think2011.qiniudn.com/cascading-select-address-2.png)
+![](http://think2011.qiniudn.com/select-address-2.png)
 
-![](http://think2011.qiniudn.com/cascading-select-address-1.gif)
+![](http://think2011.qiniudn.com/select-address-1.gif)
 
 说明：
 ```
