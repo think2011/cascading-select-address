@@ -5,24 +5,30 @@
   app = angular.module('selectAddress', []);
 
   app.directive('selectAddress', function($http, $q, $compile) {
-    var delay, isInit;
+    var cityURL, delay, isInit, templateURL;
     isInit = false;
     delay = $q.defer();
+    templateURL = 'template/index.html';
+    cityURL = 'template/city.min.js';
     return {
       restrict: 'A',
       scope: {
         p: '=',
         a: '=',
         c: '=',
-        d: '='
+        d: '=',
+        ngModel: '='
       },
       link: function(scope, element, attrs) {
         var popup;
         if (!isInit) {
           isInit = true;
-          $http.get('template/index.html').success(function(data) {
-            $('body').append($compile(data)(scope));
-            return $http.get("template/city.min.js").success(function(data) {
+          $http.get(templateURL).success(function(data) {
+            var $template;
+            $template = $compile(data)(scope);
+            $('body').append($template);
+            popup.element = $($template[2]);
+            return $http.get(cityURL).success(function(data) {
               scope.provinces = data;
               delay.resolve(scope.provinces);
               return popup.init();
@@ -30,21 +36,19 @@
           });
         }
         popup = {
+          element: null,
+          backdrop: null,
           show: function() {
-            return $('.select-address').addClass('active');
+            return this.element.addClass('active');
           },
           hide: function() {
-            $('.select-address').removeClass('active');
+            this.element.removeClass('active');
             return false;
           },
           resize: function() {
-            var $template;
-            $template = $('.select-address');
-            $template.on('click', function() {
-              return event.stopPropagation();
-            }).show().css({
-              top: -$template.height() - 30,
-              'margin-left': -$template.width() / 2
+            this.element.css({
+              top: -this.element.height() - 30,
+              'margin-left': -this.element.width() / 2
             });
             return false;
           },
@@ -53,18 +57,28 @@
             return false;
           },
           init: function() {
-            return $(window).on('click', (function(_this) {
+            element.on('click keydown', function() {
+              popup.show();
+              event.stopPropagation();
+              return false;
+            });
+            $(window).on('click', (function(_this) {
               return function() {
                 return _this.hide();
               };
             })(this));
+            this.element.on('click', function() {
+              return event.stopPropagation();
+            });
+            return setTimeout((function(_this) {
+              return function() {
+                _this.element.show();
+                return _this.resize();
+              };
+            })(this), 500);
           }
         };
         return delay.promise.then(function(data) {
-          element.on('click', function() {
-            event.stopPropagation();
-            return $('.select-address').addClass('active');
-          });
           scope.aSet = {
             p: function(p) {
               scope.p = p;
@@ -124,6 +138,19 @@
             }
           });
           return scope.$watch(function() {
+            scope.ngModel = '';
+            if (scope.p) {
+              scope.ngModel += scope.p;
+            }
+            if (scope.c) {
+              scope.ngModel += " " + scope.c;
+            }
+            if (scope.a) {
+              scope.ngModel += " " + scope.a;
+            }
+            if (scope.d) {
+              scope.ngModel += " " + scope.d;
+            }
             return popup.resize();
           });
         });
