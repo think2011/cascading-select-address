@@ -1,4 +1,4 @@
-select-address2.1
+select-address2.1.1
 ========================
 
 angularjs 实现的省市区地址级联选择器
@@ -14,13 +14,13 @@ angularjs 实现的省市区地址级联选择器
 说明：
 ```
 #
-# 地址选择器 2.1
+# 地址选择器 2.1.1
 # @param {scope} p 省份
 # @param {scope} a 区域
 # @param {scope} c 县级
 # @param {scope} d 地址
 # @example
-# <input select-address p="p" a="a" c="c" d="d" value="{{p}} {{a}} {{c}} {{d}}" type="text" />
+# <input select-address p="p" c="c" a="a" d="d" ng-model="xxx" placeholder="请选择所在地" type="text" class="form-control" />
 #
 ```
 
