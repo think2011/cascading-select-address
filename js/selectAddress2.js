@@ -5,11 +5,13 @@
   app = angular.module('selectAddress', []);
 
   app.directive('selectAddress', function($http, $q, $compile) {
-    var cityURL, delay, isInit, templateURL;
-    isInit = false;
+    var cityURL, delay, templateURL;
     delay = $q.defer();
     templateURL = 'template/index.html';
     cityURL = 'template/city.min.js';
+    $http.get(cityURL).success(function(data) {
+      return delay.resolve(data);
+    });
     return {
       restrict: 'A',
       scope: {
@@ -21,20 +23,6 @@
       },
       link: function(scope, element, attrs) {
         var popup;
-        if (!isInit) {
-          isInit = true;
-          $http.get(templateURL).success(function(data) {
-            var $template;
-            $template = $compile(data)(scope);
-            $('body').append($template);
-            popup.element = $($template[2]);
-            return $http.get(cityURL).success(function(data) {
-              scope.provinces = data;
-              delay.resolve(scope.provinces);
-              return popup.init();
-            });
-          });
-        }
         popup = {
           element: null,
           backdrop: null,
@@ -46,6 +34,9 @@
             return false;
           },
           resize: function() {
+            if (!this.element) {
+              return;
+            }
             this.element.css({
               top: -this.element.height() - 30,
               'margin-left': -this.element.width() / 2
@@ -79,6 +70,14 @@
           }
         };
         return delay.promise.then(function(data) {
+          $http.get(templateURL).success(function(template) {
+            var $template;
+            $template = $compile(template)(scope);
+            $('body').append($template);
+            popup.element = $($template[2]);
+            scope.provinces = data;
+            return popup.init();
+          });
           scope.aSet = {
             p: function(p) {
               scope.p = p;
